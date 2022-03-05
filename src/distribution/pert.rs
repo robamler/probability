@@ -1,5 +1,10 @@
+use alloc::{vec, vec::Vec};
+
 use distribution;
 use source::Source;
+
+#[cfg(not(feature = "std"))]
+use special::basics::FloatExt;
 
 /// A PERT distribution.
 #[derive(Clone, Copy, Debug)]
@@ -171,6 +176,7 @@ impl distribution::Variance for Pert {
 
 #[cfg(test)]
 mod tests {
+    use alloc::{vec, vec::Vec};
     use assert;
     use prelude::*;
 
@@ -179,6 +185,7 @@ mod tests {
     );
 
     #[test]
+    #[cfg_attr(miri, ignore)]
     fn density() {
         let d = new!(-1.0, 0.5, 2.0);
         let beta = Beta::new(3.0, 3.0, -1.0, 2.0);
@@ -238,7 +245,7 @@ mod tests {
 
     #[test]
     fn entropy() {
-        use std::f64::consts::E;
+        use core::f64::consts::E;
         let d = vec![
             new!(0.0, 0.5, 1.0),
             new!(0.0, 0.5, E),
@@ -255,6 +262,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore)]
     fn inverse() {
         let d = new!(-1.0, 0.5, 2.0);
         let p = vec![0.0, 0.2, 0.4, 0.6, 0.8, 1.0];
@@ -294,6 +302,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore)]
     fn median() {
         assert::close(new!(0.0, 0.5, 1.0).median(), 0.5, 1e-14);
         assert::close(new!(0.0, 0.3, 1.0).median(), 0.3509994849491181, 1e-14);
@@ -305,6 +314,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore)]
     fn sample() {
         for x in Independent(&new!(7.0, 20.0, 42.0), &mut source::default()).take(100) {
             assert!(7.0 <= x && x <= 42.0);

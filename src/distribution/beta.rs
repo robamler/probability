@@ -1,5 +1,10 @@
+use alloc::{vec, vec::Vec};
+
 use distribution;
 use source::Source;
+
+#[cfg(not(feature = "std"))]
+use special::basics::FloatExt;
 
 /// A beta distribution.
 #[derive(Clone, Copy, Debug)]
@@ -185,6 +190,7 @@ impl distribution::Variance for Beta {
 
 #[cfg(test)]
 mod tests {
+    use alloc::{vec, vec::Vec};
     use assert;
     use prelude::*;
 
@@ -193,6 +199,7 @@ mod tests {
     );
 
     #[test]
+    #[cfg_attr(miri, ignore)]
     fn density() {
         let d = new!(2.0, 3.0, -1.0, 2.0);
         let x = vec![
@@ -272,7 +279,7 @@ mod tests {
 
     #[test]
     fn entropy() {
-        use std::f64::consts::E;
+        use core::f64::consts::E;
         let d = vec![
             new!(1.0, 1.0, 0.0, 1.0),
             new!(1.0, 1.0, 0.0, E),
@@ -287,6 +294,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore)]
     fn inverse() {
         let d = new!(1.0, 2.0, 3.0, 4.0);
         let p = vec![
@@ -373,6 +381,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore)]
     fn sample() {
         for x in Independent(&new!(1.0, 2.0, 7.0, 42.0), &mut source::default()).take(100) {
             assert!(7.0 <= x && x <= 42.0);

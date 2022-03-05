@@ -1,6 +1,10 @@
+
 extern crate probability;
+
+#[cfg(feature = "std")]
 extern crate rand;
 
+#[cfg(feature = "std")]
 fn main() {
     use probability::prelude::*;
 
@@ -18,3 +22,6 @@ fn main() {
     let samples = sampler.take(10).collect::<Vec<_>>();
     print!("{:?}", samples);
 }
+
+#[cfg(not(feature = "std"))]
+fn main() { }

@@ -19,10 +19,15 @@ readme = "README.md"
 categories = ["algorithms", "science"]
 keywords = ["distribution", "probability", "sampling", "statistics", "random"]
 
+[features]
+default = ["std"]
+std = ["special/std"]
+
 [dependencies]
 random = "0.12"
-special = "0.8"
+# FIXME: use upstream version of `special` if proposed changes get accepted.
+special = {git = "https://github.com/robamler/special.git", rev = "40212cd83217cc28a9af81869249a0853947727e", default-features = false}
 
 [dev-dependencies]
 assert = "0.7"
-rand = "0.5"
+rand = {version = "0.8.5", default-features = false}
